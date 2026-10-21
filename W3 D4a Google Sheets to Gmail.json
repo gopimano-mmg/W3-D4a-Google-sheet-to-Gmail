@@ -1,0 +1,151 @@
+{
+  "name": "W3 D4a Google Sheets to Gmail",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "8443d146-d754-43ef-add3-6e1230532e2e",
+      "name": "Manual Trigger"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1yyMqFguWYo3fADVQ7PRCHgXwuQurs8cljKZhCTvtDhM",
+          "mode": "list",
+          "cachedResultName": "n8n Student Data",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1yyMqFguWYo3fADVQ7PRCHgXwuQurs8cljKZhCTvtDhM/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1yyMqFguWYo3fADVQ7PRCHgXwuQurs8cljKZhCTvtDhM/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        224,
+        0
+      ],
+      "id": "0ac42178-3c3a-431f-a504-a804d49fb450",
+      "name": "Get row(s) in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "JITqCx5AzLTwVIaD",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "b6d77af2-505c-4361-b10e-cc2b558e3f0b",
+              "name": "subject",
+              "value": "=Data Summary - {{ $json.Name }}",
+              "type": "string"
+            },
+            {
+              "id": "73589947-1b3f-43b7-8651-555baecee2cc",
+              "name": "message_body",
+              "value": "=Hi,  Here is the latest data from the Google Sheet:  Name: {{ $json.Name }} Course: {{ $json.Course }} Status: {{ $json.Status }}  Regards, Your Automation Bot",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        448,
+        0
+      ],
+      "id": "34070c08-7c7d-4882-a764-400ea5d3dbf8",
+      "name": "Prepare Email"
+    },
+    {
+      "parameters": {
+        "sendTo": "deiveegaaoffice@gmail.com",
+        "subject": "={{ $json.subject }}",
+        "emailType": "text",
+        "message": "={{ $json.message_body }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        672,
+        0
+      ],
+      "id": "1f717b5c-3034-4d07-9cbb-cefbadb13154",
+      "name": "Send Summary Email",
+      "webhookId": "d9bd3fda-4364-46e6-bf14-b1c85703c2ac",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "f7mwJ944Nz27QeLA",
+          "name": "Gmail account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Manual Trigger": {
+      "main": [
+        [
+          {
+            "node": "Get row(s) in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet": {
+      "main": [
+        [
+          {
+            "node": "Prepare Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Email": {
+      "main": [
+        [
+          {
+            "node": "Send Summary Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "eea21996-f55f-42e6-a87d-04861b435593",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "4b050d7ce0c5a266c762d90cc7c5e2fdacd1420a6befe33aa9f759d1f740a803"
+  },
+  "nodeGroups": [],
+  "id": "6H2Qbq8eYQYe1CFW",
+  "tags": []
+}
